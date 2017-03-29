@@ -1,12 +1,13 @@
 {
     "version": "1.0.0",
-    "summary": "Utilities to help detect & manage 'swipe' events on mobile devices",
+    "summary": "examples for elm-swiper",
     "repository": "https://github.com/marshallformula/elm-swiper.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "src",
+        "../src"
     ],
-    "exposed-modules": ["Swiper"],
+    "exposed-modules": [],
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0",
         "elm-lang/html": "2.0.0 <= v < 3.0.0"
