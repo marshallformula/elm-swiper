@@ -21,7 +21,7 @@ the specified DOM element.
 @docs SwipeEvent, onSwipeEvents
 
 # Swipe Detection
-@docs hasSwipedLeft, hasSwipedRight, hasSwipedUp, hasSwipedDown, onTouchFinished
+@docs hasSwipedLeft, hasSwipedRight, hasSwipedUp, hasSwipedDown, touchFinished
 -}
 
 import Html exposing (Attribute)
