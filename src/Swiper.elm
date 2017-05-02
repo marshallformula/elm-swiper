@@ -70,14 +70,14 @@ initialSwipingState =
 {-| Internal representation of the state of the swiping events
 -}
 type alias InternalState =
-    { touchSequence : Maybe (Coords -> Direction -> Bool) }
+    { touchStarted : Maybe Coords }
 
 
 {-| Helper method to set SwipingState based on new coordinates
 -}
 startTouchSequence : Coords -> SwipingState
 startTouchSequence coords =
-    SwipingState { touchSequence = Just <| checkSwiped coords }
+    SwipingState { touchStarted = Just coords }
 
 
 {-| Checks whether the the event & state indicates a swipe to the left.
@@ -115,18 +115,18 @@ hasSwipedDown =
 {-| Helper function to detect swipe direction.
 -}
 hasSwiped : Direction -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwiped dir evt (SwipingState { touchSequence }) =
+hasSwiped dir evt (SwipingState { touchStarted }) =
     case evt of
         TouchStart coords ->
             ( startTouchSequence coords, False )
 
         TouchEnd coords ->
-            case touchSequence of
+            case touchStarted of
                 Nothing ->
                     ( initialSwipingState, False )
 
-                Just f ->
-                    ( initialSwipingState, f coords dir )
+                Just firstTouch ->
+                    ( initialSwipingState, checkSwiped firstTouch coords dir )
 
 
 {-| Checks the swipe direction based on the coords from the touchstart vs the touchend
