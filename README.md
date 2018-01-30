@@ -28,6 +28,17 @@ type Msg
     = Swiped Swiper.SwipeEvent
 
 -- Update
+init : ( Model, Cmd Msg )
+init =
+    let
+        initialModel =
+            { swipingState = Swiper.initialSwipingState
+            , userSwipedLeft = False
+            }
+    in
+        ( initialModel, Cmd.none )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg)
 update msg model =
     case msg of
