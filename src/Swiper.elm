@@ -1,27 +1,27 @@
-module Swiper
-    exposing
-        ( SwipeEvent
-        , SwipingState
-        , initialSwipingState
-        , hasSwipedLeft
-        , hasSwipedRight
-        , hasSwipedUp
-        , hasSwipedDown
-        , touchFinished
-        , onSwipeEvents
-        )
+module Swiper exposing
+    ( SwipingState, initialSwipingState
+    , SwipeEvent, onSwipeEvents
+    , hasSwipedLeft, hasSwipedRight, hasSwipedUp, hasSwipedDown, touchFinished
+    )
 
 {-| This library handles detection of specific touch events (for mobile) that indicates a user swiping across
 the specified DOM element.
 
+
 # State
+
 @docs SwipingState, initialSwipingState
 
+
 # Events
+
 @docs SwipeEvent, onSwipeEvents
 
+
 # Swipe Detection
+
 @docs hasSwipedLeft, hasSwipedRight, hasSwipedUp, hasSwipedDown, touchFinished
+
 -}
 
 import Html exposing (Attribute)
@@ -37,7 +37,7 @@ type alias Coords =
     }
 
 
-{-| This event is either a "touchstart" or "touchend" event.  You don't need to worry about which -
+{-| This event is either a "touchstart" or "touchend" event. You don't need to worry about which -
 just need to hang on to it so you can pass it back to a "hasSwipedXXX" function.
 -}
 type SwipeEvent
@@ -54,7 +54,7 @@ type Direction
     | Down
 
 
-{-| Since there is no actual "swipe" event - the detection of a swipe is determined by evaluating the coordinates of "touchstart" and "touchend" events.  This means some "state" must be stored by the application between events.  That state is encapsulated in *SwipingState*. Store this so it can be passed to a hasSwipedXXX function.
+{-| Since there is no actual "swipe" event - the detection of a swipe is determined by evaluating the coordinates of "touchstart" and "touchend" events. This means some "state" must be stored by the application between events. That state is encapsulated in _SwipingState_. Store this so it can be passed to a hasSwipedXXX function.
 -}
 type SwipingState
     = SwipingState InternalState
