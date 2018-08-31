@@ -3,7 +3,7 @@
     "name": "marshallformula/elm-swiper",
     "summary": "Utilities to help detect & manage 'swipe' events on mobile devices",
     "license": "BSD-3-Clause",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exposed-modules": [
         "Swiper"
     ],
