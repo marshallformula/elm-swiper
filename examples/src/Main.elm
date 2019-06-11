@@ -32,11 +32,14 @@ init =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        threshold = 100
+    in
     case msg of
         Swiped evt ->
             let
                 ( newState, swipedLeft ) =
-                    Swiper.hasSwipedLeft evt model.swipingState
+                    Swiper.hasSwipedLeft threshold evt model.swipingState
             in
                 ( { model | menuOpen = swipedLeft, swipingState = newState }, Cmd.none )
 
