@@ -48,7 +48,7 @@ type SwipeEvent
 {-| Swiping Directions
 -}
 type Direction
-    = Right
+    = Right 
     | Left
     | Up
     | Down
@@ -83,39 +83,39 @@ startTouchSequence coords =
 {-| Checks whether the the event & state indicates a swipe to the left.
 Returns a tuple with the new SwipingState and the Bool answer.
 -}
-hasSwipedLeft : SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwipedLeft =
-    hasSwiped Left
+hasSwipedLeft : Float -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
+hasSwipedLeft threshold =
+    hasSwiped threshold Left
 
 
 {-| Checks whether the event & state indicates a swipe to the right.
 Returns a tuple with the new SwipingState and the Bool answer.
 -}
-hasSwipedRight : SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwipedRight =
-    hasSwiped Right
+hasSwipedRight : Float -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
+hasSwipedRight threshold =
+    hasSwiped threshold Right
 
 
 {-| Checks whether the event & state indicates a swipe upward.
 Returns a tuple with the new SwipingState and the Bool answer.
 -}
-hasSwipedUp : SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwipedUp =
-    hasSwiped Up
+hasSwipedUp : Float -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
+hasSwipedUp threshold =
+    hasSwiped threshold Up
 
 
 {-| Checks whther the event & state indicates a swipe downward.
 Returns a tuple with the new SwipingState and the Bool answer.
 -}
-hasSwipedDown : SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwipedDown =
-    hasSwiped Down
+hasSwipedDown : Float -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
+hasSwipedDown threshold =
+    hasSwiped threshold Down 
 
 
 {-| Helper function to detect swipe direction.
 -}
-hasSwiped : Direction -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
-hasSwiped dir evt (SwipingState { touchStarted }) =
+hasSwiped : Float -> Direction -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
+hasSwiped threshold dir evt (SwipingState { touchStarted }) =
     case evt of
         TouchStart coords ->
             ( startTouchSequence coords, False )
@@ -126,25 +126,35 @@ hasSwiped dir evt (SwipingState { touchStarted }) =
                     ( initialSwipingState, False )
 
                 Just firstTouch ->
-                    ( initialSwipingState, checkSwiped firstTouch coords dir )
+                    ( initialSwipingState, checkSwiped firstTouch coords dir threshold)
 
 
 {-| Checks the swipe direction based on the coords from the touchstart vs the touchend
 -}
-checkSwiped : Coords -> Coords -> Direction -> Bool
-checkSwiped start end dir =
+checkSwiped : Coords -> Coords -> Direction -> Float -> Bool
+checkSwiped start end dir threshold =
+    let 
+        isGreater = isGreaterThanThreshold threshold
+    in
     case dir of
         Left ->
-            start.clientX < end.clientX
+            isGreater end.clientX start.clientX
 
         Right ->
-            start.clientX > end.clientX
+            isGreater start.clientX end.clientX
 
         Up ->
-            start.clientY > end.clientY
+            isGreater start.clientY end.clientY
 
         Down ->
-            start.clientY < end.clientY
+            isGreater end.clientY start.clientY
+
+
+{-| Helper function that checks is a number is greater than another and the 
+    difference is above a specified threshold -}
+isGreaterThanThreshold : Float -> Float -> Float -> Bool
+isGreaterThanThreshold threshold shouldBeGreater shouldBeSmaller =
+    shouldBeGreater > shouldBeSmaller && shouldBeGreater - shouldBeSmaller > threshold
 
 
 {-| Convenience function that will indicate if this is a "touchend" event.
