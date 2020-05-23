@@ -48,7 +48,7 @@ type SwipeEvent
 {-| Swiping Directions
 -}
 type Direction
-    = Right 
+    = Right
     | Left
     | Up
     | Down
@@ -109,7 +109,7 @@ Returns a tuple with the new SwipingState and the Bool answer.
 -}
 hasSwipedDown : Float -> SwipeEvent -> SwipingState -> ( SwipingState, Bool )
 hasSwipedDown threshold =
-    hasSwiped threshold Down 
+    hasSwiped threshold Down
 
 
 {-| Helper function to detect swipe direction.
@@ -126,15 +126,16 @@ hasSwiped threshold dir evt (SwipingState { touchStarted }) =
                     ( initialSwipingState, False )
 
                 Just firstTouch ->
-                    ( initialSwipingState, checkSwiped firstTouch coords dir threshold)
+                    ( initialSwipingState, checkSwiped firstTouch coords dir threshold )
 
 
 {-| Checks the swipe direction based on the coords from the touchstart vs the touchend
 -}
 checkSwiped : Coords -> Coords -> Direction -> Float -> Bool
 checkSwiped start end dir threshold =
-    let 
-        isGreater = isGreaterThanThreshold threshold
+    let
+        isGreater =
+            isGreaterThanThreshold threshold
     in
     case dir of
         Left ->
@@ -150,8 +151,9 @@ checkSwiped start end dir threshold =
             isGreater end.clientY start.clientY
 
 
-{-| Helper function that checks is a number is greater than another and the 
-    difference is above a specified threshold -}
+{-| Helper function that checks is a number is greater than another and the
+difference is above a specified threshold
+-}
 isGreaterThanThreshold : Float -> Float -> Float -> Bool
 isGreaterThanThreshold threshold shouldBeGreater shouldBeSmaller =
     shouldBeGreater > shouldBeSmaller && shouldBeGreater - shouldBeSmaller > threshold

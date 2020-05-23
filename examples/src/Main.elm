@@ -1,8 +1,10 @@
 module Main exposing (..)
 
+import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Swiper
+
 
 
 -- Model
@@ -25,15 +27,16 @@ initialModel =
 -- Update
 
 
-init : ( Model, Cmd Msg )
-init =
+init : {} -> ( Model, Cmd Msg )
+init _ =
     ( initialModel, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        threshold = 100
+        threshold =
+            100
     in
     case msg of
         Swiped evt ->
@@ -41,7 +44,7 @@ update msg model =
                 ( newState, swipedLeft ) =
                     Swiper.hasSwipedLeft threshold evt model.swipingState
             in
-                ( { model | menuOpen = swipedLeft, swipingState = newState }, Cmd.none )
+            ( { model | menuOpen = swipedLeft, swipingState = newState }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -60,60 +63,65 @@ type Msg
 -- Styling
 
 
-navStyle : Bool -> Attribute Msg
+navStyle : Bool -> List (Attribute Msg)
 navStyle menuOpen =
-    style
-        [ ( "padding", "1em" )
-        , ( "list-style", "none" )
-        , ( "width", "100%" )
-        , ( "height", "100%" )
-        , ( "position", "fixed" )
-        , ( "top", "0" )
-        , ( "right", "0" )
-        , ( "bottom", "0" )
-        , ( "left"
-          , if menuOpen then
-                "0"
-            else
-                "-50px"
-          )
-        , ( "z-index", "0" )
-        , ( "transition", "left 0.2s" )
-        ]
+    [ style "padding" "1em"
+    , style "list-style" "none"
+    , style "width" "100%"
+    , style "height" "100%"
+    , style "position" "fixed"
+    , style "top" "0"
+    , style "right" "0"
+    , style "bottom" "0"
+    , style "left" <|
+        if menuOpen then
+            "0"
+
+        else
+            "-50px"
+    , style "z-index" "0"
+    , style "transition" "left 0.2s"
+    ]
 
 
-siteStyle : Bool -> Attribute Msg
+siteStyle : Bool -> List (Attribute Msg)
 siteStyle menuOpen =
-    style
-        [ ( "padding", "4rem" )
-        , ( "min-width", "100%" )
-        , ( "min-height", "100%" )
-        , ( "position", "absolute" )
-        , ( "top", "0" )
-        , ( "bottom", "100%" )
-        , ( "left"
-          , if menuOpen then
-                "200px"
-            else
-                "0"
-          )
-        , ( "z-index", "1" )
-        , ( "transition", "left 0.2s" )
-        , ( "background-color", "white" )
-        , ( "border-left", "1px solid rgba(0, 0, 0, 0.25)" )
-        , ( "box-shadow", "0 14px 28px rgba(0, 0, 0, 0.25)" )
-        ]
+    [ style "padding" "4rem"
+    , style "min-width" "100%"
+    , style "min-height" "100%"
+    , style "position" "absolute"
+    , style "top" "0"
+    , style "bottom" "100%"
+    , style "left" <|
+        if menuOpen then
+            "200px"
+
+        else
+            "0"
+    , style "z-index" "1"
+    , style "transition" "left 0.2s"
+    , style "background-color" "white"
+    , style "border-left" "1px solid rgba(0, 0, 0, 0.25)"
+    , style "box-shadow" "0 14px 28px rgba(0, 0, 0, 0.25)"
+    ]
 
 
 
 -- View
 
 
+documentView : Model -> Browser.Document Msg
+documentView model =
+    { title = "elm-swiper example"
+    , body = [ view model ]
+    }
+
+
 view : Model -> Html Msg
 view model =
-    div [ style [ ( "font-family", "Helvetica, Arial, sans-serif" ) ] ]
+    div [ style "font-family" "Helvetica, Arial, sans-serif" ]
         [ navigation model
-        , div (id "MainSite" :: siteStyle model.menuOpen :: Swiper.onSwipeEvents Swiped)
+        , div (id "MainSite" :: siteStyle model.menuOpen ++ Swiper.onSwipeEvents Swiped)
             [ h1 [] [ text "This is the main website" ]
             , p [] [ text "swipe left here" ]
             , p [] [ em [] [ text "use chrome dev-tools to simulate mobile" ] ]
@@ -124,7 +132,7 @@ view model =
 navigation : Model -> Html Msg
 navigation model =
     nav []
-        [ ul [ class "navigtion", navStyle model.menuOpen ]
+        [ ul (class "navigtion" :: navStyle model.menuOpen)
             [ li [ class "nav-item" ] [ a [ href "#" ] [ text "Home" ] ]
             , li [ class "nav-item" ] [ a [ href "#" ] [ text "About" ] ]
             , li [ class "nav-item" ] [ a [ href "#" ] [ text "Contact" ] ]
@@ -136,11 +144,11 @@ navigation model =
 -- App
 
 
-main : Program Never Model Msg
+main : Program {} Model Msg
 main =
-    Html.program
+    Browser.document
         { init = init
         , update = update
-        , subscriptions = (\_ -> Sub.none)
-        , view = view
+        , view = documentView
+        , subscriptions = \_ -> Sub.none
         }
